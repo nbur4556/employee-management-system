@@ -50,10 +50,10 @@ const employeeManagementConnection = new DbConnection('employee_management_db');
 //     );
 
 // UPDATE TEST
-employeeManagementConnection.sendQuery('UPDATE employee SET last_name = "Eilish" WHERE id = 6')
-    .then(
-        (res) => { console.log(res); }
-    );
+// employeeManagementConnection.sendQuery('UPDATE employee SET last_name = "Eilish" WHERE id = 6')
+//     .then(
+//         (res) => { console.log(res); }
+//     );
 
 
 // DELETE TEST
