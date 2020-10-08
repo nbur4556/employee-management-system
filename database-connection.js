@@ -17,18 +17,14 @@ class DbConnection {
             if (err) throw err;
 
             console.log(`Successfully connected to MySQL database`);
+            this.connection.end();
         });
     }
 
-    // Create data on the database
-    create(tableName, colNames) {
-
-    }
-
     // Read data on the database
-    read(tableName, query = '*') {
+    sendQuery(query) {
         return new Promise((resolve, reject) => {
-            this.connection.query(`SELECT ${query} FROM ${tableName}`, (err, res) => {
+            this.connection.query(query, (err, res) => {
                 if (err) reject(err);
 
                 resolve(res);
@@ -36,28 +32,34 @@ class DbConnection {
             });
         });
     }
-
-    // Update data on the database
-    update() {
-
-    }
-
-    // Delete data on the database
-    delete() {
-
-    }
 }
 
 const employeeManagementConnection = new DbConnection('employee_management_db');
 // employeeManagementConnection.testConnection();
 
+// CREATE TEST
+// employeeManagementConnection.sendQuery('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUE("Billie", "Jean", 15, 7)')
+//     .then(
+//         (res) => { console.log(res); }
+//     );
+
 // READ TEST
-employeeManagementConnection.read('fake')
-    .then(res => {
-        console.log(res);
-    })
-    .catch(err => {
-        console.log(err);
-    });
+// employeeManagementConnection.sendQuery('SELECT * FROM employee')
+//     .then(
+//         (res) => { console.log(res); }
+//     );
+
+// UPDATE TEST
+employeeManagementConnection.sendQuery('UPDATE employee SET last_name = "Eilish" WHERE id = 6')
+    .then(
+        (res) => { console.log(res); }
+    );
+
+
+// DELETE TEST
+// employeeManagementConnection.sendQuery('DELETE FROM employee WHERE id = 2')
+//     .then(
+//         (res) => { console.log(res); }
+//     );
 
 module.exports = DbConnection;
