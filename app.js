@@ -47,7 +47,10 @@ function editEmployee() {
 }
 
 function viewEmployees() {
-    console.log('viewEmployees');
+    dbConnect.sendQuery('SELECT * FROM employee')
+        .then(
+            (res) => { console.log(res); }
+        );
 }
 
 function addRole() {
@@ -55,7 +58,10 @@ function addRole() {
 }
 
 function viewRoles() {
-    console.log('viewRoles');
+    dbConnect.sendQuery('SELECT * FROM role')
+        .then(
+            (res) => { console.log(res); }
+        );
 }
 
 function addDepartment() {
@@ -63,5 +69,8 @@ function addDepartment() {
 }
 
 function viewDepartments() {
-    console.log('viewDepartments');
+    dbConnect.sendQuery('SELECT * FROM department')
+        .then(
+            (res) => { console.log(res); }
+        );
 }

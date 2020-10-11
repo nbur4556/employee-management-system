@@ -17,7 +17,6 @@ class DbConnection {
             if (err) throw err;
 
             console.log(`Successfully connected to MySQL database`);
-            this.connection.end();
         });
     }
 
@@ -39,12 +38,6 @@ class DbConnection {
 
 // CREATE TEST
 // employeeManagementConnection.sendQuery('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUE("Billie", "Jean", 15, 7)')
-//     .then(
-//         (res) => { console.log(res); }
-//     );
-
-// READ TEST
-// employeeManagementConnection.sendQuery('SELECT * FROM employee')
 //     .then(
 //         (res) => { console.log(res); }
 //     );
