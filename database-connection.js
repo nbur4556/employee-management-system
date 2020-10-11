@@ -34,7 +34,7 @@ class DbConnection {
     }
 }
 
-const employeeManagementConnection = new DbConnection('employee_management_db');
+// const employeeManagementConnection = new DbConnection('employee_management_db');
 // employeeManagementConnection.testConnection();
 
 // CREATE TEST
