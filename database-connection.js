@@ -36,13 +36,6 @@ class DbConnection {
 // const employeeManagementConnection = new DbConnection('employee_management_db');
 // employeeManagementConnection.testConnection();
 
-// UPDATE TEST
-// employeeManagementConnection.sendQuery('UPDATE employee SET last_name = "Eilish" WHERE id = 6')
-//     .then(
-//         (res) => { console.log(res); }
-//     );
-
-
 // DELETE TEST
 // employeeManagementConnection.sendQuery('DELETE FROM employee WHERE id = 2')
 //     .then(

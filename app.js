@@ -53,7 +53,11 @@ function addEmployee() {
 
 // Edit an employee role in the database
 function editEmployee() {
-    console.log('editEmployee');
+    let updateField = 'first_name';
+    let newValue = 'Name';
+    let roleId = 1;
+
+    dbConnect.sendQuery(`UPDATE employee SET ${updateField} = "${newValue}" WHERE id = ${roleId}`);
 }
 
 // View all employee roles in the database
