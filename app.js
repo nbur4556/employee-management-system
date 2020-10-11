@@ -1,4 +1,9 @@
 const inquirer = require('inquirer');
+const DatabaseConnection = require('./database-connection.js');
+const envvar = require('./envvar.js');
+
+dbConnect = new DatabaseConnection('employee_management_db', 'root', envvar.mysqlPassword, 'localhost', 3306);
+dbConnect.testConnection();
 
 inquirer.prompt({
     type: 'list',
