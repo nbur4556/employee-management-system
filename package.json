@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/nbur4556/employee-management-system#readme",
   "dependencies": {
+    "inquirer": "^7.3.3",
     "mysql": "^2.18.1"
   }
 }
