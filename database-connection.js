@@ -36,12 +36,6 @@ class DbConnection {
 // const employeeManagementConnection = new DbConnection('employee_management_db');
 // employeeManagementConnection.testConnection();
 
-// CREATE TEST
-// employeeManagementConnection.sendQuery('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUE("Billie", "Jean", 15, 7)')
-//     .then(
-//         (res) => { console.log(res); }
-//     );
-
 // UPDATE TEST
 // employeeManagementConnection.sendQuery('UPDATE employee SET last_name = "Eilish" WHERE id = 6')
 //     .then(

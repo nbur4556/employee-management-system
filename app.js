@@ -38,14 +38,25 @@ inquirer.prompt({
     }
 });
 
+// Create an employee row in the database
 function addEmployee() {
-    console.log('addEmployee');
+    let firstName = 'mcTest';
+    let lastName = 'Testie';
+    let roleId = 1;
+    let managerId = 2;
+
+    dbConnect.sendQuery(
+        `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+        VALUE('${firstName}', '${lastName}', ${roleId}, ${managerId})`
+    );
 }
 
+// Edit an employee role in the database
 function editEmployee() {
     console.log('editEmployee');
 }
 
+// View all employee roles in the database
 function viewEmployees() {
     dbConnect.sendQuery('SELECT * FROM employee')
         .then(
@@ -53,10 +64,19 @@ function viewEmployees() {
         );
 }
 
+// Create a role in the employee database
 function addRole() {
-    console.log('addRole');
+    let title = 'Test Title';
+    let salary = 40000;
+    let departmentId = 1;
+
+    dbConnect.sendQuery(
+        `INSERT INTO role(title, salary, department_id) 
+        VALUE('${title}', ${salary}, ${departmentId})`
+    );
 }
 
+// View all roles in the employee database
 function viewRoles() {
     dbConnect.sendQuery('SELECT * FROM role')
         .then(
@@ -64,10 +84,16 @@ function viewRoles() {
         );
 }
 
+// Create a department in the employee database
 function addDepartment() {
-    console.log('addDepartment');
+    let name = 'Test Name';
+
+    dbConnect.sendQuery(
+        `INSERT INTO department(name) VALUE('${name}')`
+    );
 }
 
+// View all departments in the employee database
 function viewDepartments() {
     dbConnect.sendQuery('SELECT * FROM department')
         .then(
