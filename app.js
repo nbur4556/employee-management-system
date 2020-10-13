@@ -89,7 +89,9 @@ function addEmployee() {
         dbConnect.sendQuery(
             `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
             VALUE('${res.firstName}', '${res.lastName}', ${res.roleId}, ${res.managerId})`
-        );
+        ).then(() => {
+            selectAction();
+        });
     });
 }
 
@@ -111,7 +113,9 @@ function addRole() {
         dbConnect.sendQuery(
             `INSERT INTO role(title, salary, department_id) 
             VALUE('${res.title}', ${res.salary}, ${res.departmentId})`
-        );
+        ).then(() => {
+            selectAction();
+        });
     });
 }
 
@@ -124,7 +128,9 @@ function addDepartment() {
     }).then(res => {
         dbConnect.sendQuery(
             `INSERT INTO department(name) VALUE('${res.name}')`
-        );
+        ).then(() => {
+            selectAction();
+        });
     });
 }
 
@@ -135,6 +141,8 @@ function viewFromDatabase(tableName) {
             for (let i = 0; i < res.length; i++) {
                 console.log(res[i]);
             }
+        }).then(() => {
+            selectAction();
         });
 }
 
@@ -156,7 +164,9 @@ function editOnDatabase(tableName, choices) {
     }]).then(res => {
         dbConnect.sendQuery(
             `UPDATE ${tableName} SET ${res.updateField} = "${res.newValue}" WHERE id = ${res.id}`
-        );
+        ).then(() => {
+            selectAction();
+        });
     })
 }
 
@@ -167,7 +177,10 @@ function deleteFromDatabase(tableName) {
         name: 'id',
         message: `Enter ${tableName} ID to delete:`
     }).then(res => {
-        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${res.id}"`);
+        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${res.id}"`)
+            .then(() => {
+                selectAction();
+            });
     });
 }
 
