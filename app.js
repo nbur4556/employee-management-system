@@ -84,10 +84,6 @@ function viewEmployees() {
 
 // Create new role and add to database
 function addRole() {
-    // let title = 'Test Title';
-    // let salary = 40000;
-    // let departmentId = 1;
-
     inquirer.prompt([{
         type: 'input',
         name: 'title',
@@ -116,13 +112,17 @@ function viewRoles() {
         );
 }
 
-// Create a department in the employee database
+// Create new department and add to database
 function addDepartment() {
-    let name = 'Test Name';
-
-    dbConnect.sendQuery(
-        `INSERT INTO department(name) VALUE('${name}')`
-    );
+    inquirer.prompt({
+        type: 'input',
+        name: 'name',
+        message: 'Enter name of new department'
+    }).then(response => {
+        dbConnect.sendQuery(
+            `INSERT INTO department(name) VALUE('${response.name}')`
+        );
+    });
 }
 
 // View all departments in the employee database
