@@ -9,7 +9,7 @@ dbConnect.testConnection();
 inquirer.prompt({
     type: 'list',
     name: 'action',
-    message: 'Choose an action: ',
+    message: 'Choose an action',
     choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Delete Employee', 'Add Role',
         'View Roles', 'Delete Role', 'Add Department', 'View Departments', 'Delete Department']
 }).then(response => {
@@ -18,7 +18,7 @@ inquirer.prompt({
             addEmployee();
             break;
         case 'Edit Employee':
-            editEmployee();
+            editOnDatabase('employee', ['first_name', 'last_name', 'role_id', 'manager_id']);
             break;
         case 'View Employees':
             viewFromDatabase('employee');
@@ -58,15 +58,15 @@ function addEmployee() {
     }, {
         type: 'input',
         name: 'lastName',
-        message: 'Enter new employees last name: '
+        message: 'Enter new employees last name:'
     }, {
         type: 'number',
         name: 'roleId',
-        message: 'Enter new employees role id: '
+        message: 'Enter new employees role id:'
     }, {
         type: 'number',
         name: 'managerId',
-        message: 'Enter new employees manager id: '
+        message: 'Enter new employees manager id:'
     }]).then(response => {
         dbConnect.sendQuery(
             `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
@@ -75,29 +75,20 @@ function addEmployee() {
     });
 }
 
-// Edit an employee role in the database
-function editEmployee() {
-    let updateField = 'first_name';
-    let newValue = 'Name';
-    let roleId = 1;
-
-    dbConnect.sendQuery(`UPDATE employee SET ${updateField} = "${newValue}" WHERE id = ${roleId}`);
-}
-
 // Create new role and add to database
 function addRole() {
     inquirer.prompt([{
         type: 'input',
         name: 'title',
-        message: 'Enter title of new role: '
+        message: 'Enter title of new role:'
     }, {
         type: 'number',
         name: 'salary',
-        message: 'Enter annual salary for new role: '
+        message: 'Enter annual salary for new role:'
     }, {
         type: 'number',
         name: 'departmentId',
-        message: 'Enter department ID for new role: '
+        message: 'Enter department ID for new role:'
     }]).then(response => {
         dbConnect.sendQuery(
             `INSERT INTO role(title, salary, department_id) 
@@ -128,11 +119,33 @@ function viewFromDatabase(tableName) {
         });
 }
 
+// Edit an employee role in the database
+function editOnDatabase(tableName, choices) {
+    inquirer.prompt([{
+        type: 'list',
+        name: 'updateField',
+        message: 'Select field to update',
+        choices: choices
+    }, {
+        type: 'number',
+        name: 'id',
+        message: `Enter ${tableName} ID to update:`,
+    }, {
+        type: 'input',
+        name: 'newValue',
+        message: 'Enter new value:',
+    }]).then(response => {
+        dbConnect.sendQuery(
+            `UPDATE ${tableName} SET ${response.updateField} = "${response.newValue}" WHERE id = ${response.id}`
+        );
+    })
+}
+
 function deleteFromDatabase(tableName) {
     inquirer.prompt({
         type: 'number',
         name: 'id',
-        message: `Enter ${tableName} ID to delete: `
+        message: `Enter ${tableName} ID to delete:`
     }).then(response => {
         dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${response.id}"`);
     });
