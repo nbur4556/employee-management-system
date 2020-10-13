@@ -70,7 +70,7 @@ async function selectAction() {
 
 // Create new employee and add to database
 async function addEmployee() {
-    let { firstName, lastName, roleId, managerName } = await inquirer.prompt([{
+    let { firstName, lastName, roleName, managerName } = await inquirer.prompt([{
         type: 'input',
         name: 'firstName',
         message: 'Enter new employees first name:'
@@ -80,7 +80,7 @@ async function addEmployee() {
         message: 'Enter new employees last name:'
     }, {
         type: 'list',
-        name: 'roleId',
+        name: 'roleName',
         message: 'Select a role for new employee',
         choices: await dbConnect.getSelectionOptions('role')
     }, {
@@ -90,9 +90,13 @@ async function addEmployee() {
         choices: await dbConnect.getSelectionOptions('employee')
     }]);
 
+    // Gets id from choice string
+    let managerId = getIdFromChoice(managerName);
+    let roleId = getIdFromChoice(roleName);
+
     await dbConnect.sendQuery(
         `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-        VALUE('${firstName}', '${lastName}', ${roleId[0]}, ${managerName[0]})`
+        VALUE('${firstName}', '${lastName}', ${roleId}, ${managerId})`
     );
 
     selectAction();
@@ -174,17 +178,24 @@ function editOnDatabase(tableName, choices) {
 }
 
 // Delete data from database
-function deleteFromDatabase(tableName) {
-    inquirer.prompt({
-        type: 'number',
-        name: 'id',
-        message: `Enter ${tableName} ID to delete:`
-    }).then(res => {
-        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${res.id}"`)
-            .then(() => {
-                selectAction();
-            });
+async function deleteFromDatabase(tableName) {
+    let { deleteItem } = await inquirer.prompt({
+        type: 'list',
+        name: 'deleteItem',
+        message: `Select ${tableName} to delete`,
+        choices: await dbConnect.getSelectionOptions(tableName)
     });
+
+    // Gets id from choice string
+    let deleteId = getIdFromChoice(deleteItem);
+
+    await dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${deleteId}"`);
+    selectAction();
+}
+
+function getIdFromChoice(choice) {
+    let arr = choice.split(':');
+    return arr[0];
 }
 
 // Start Application
