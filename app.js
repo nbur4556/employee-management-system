@@ -10,8 +10,8 @@ inquirer.prompt({
     type: 'list',
     name: 'action',
     message: 'Choose an action',
-    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Delete Employee', 'Add Role',
-        'View Roles', 'Delete Role', 'Add Department', 'View Departments', 'Delete Department']
+    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Delete Employee', 'Add Role', 'Edit Role',
+        'View Roles', 'Delete Role', 'Add Department', 'Edit Department', 'View Departments', 'Delete Department']
 }).then(response => {
     switch (response.action) {
         case 'Add Employee':
@@ -29,6 +29,9 @@ inquirer.prompt({
         case 'Add Role':
             addRole();
             break;
+        case 'Edit Role':
+            editOnDatabase('role', ['title', 'salary', 'department_id']);
+            break;
         case 'View Roles':
             viewFromDatabase('role');
             break;
@@ -37,6 +40,9 @@ inquirer.prompt({
             break;
         case 'Add Department':
             addDepartment();
+            break;
+        case 'Edit Department':
+            editOnDatabase('department', ['name']);
             break;
         case 'View Departments':
             viewFromDatabase('department');
