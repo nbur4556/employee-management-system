@@ -9,8 +9,9 @@ dbConnect.testConnection();
 inquirer.prompt({
     type: 'list',
     name: 'action',
-    message: 'Choose an action',
-    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Add Role', 'View Roles', 'Add Department', 'View Departments']
+    message: 'Choose an action: ',
+    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Delete Employee', 'Add Role',
+        'View Roles', 'Delete Role', 'Add Department', 'View Departments', 'Delete Department']
 }).then(response => {
     switch (response.action) {
         case 'Add Employee':
@@ -22,17 +23,26 @@ inquirer.prompt({
         case 'View Employees':
             viewEmployees();
             break;
+        case 'Delete Employee':
+            deleteFromDatabase('employee');
+            break;
         case 'Add Role':
             addRole();
             break;
         case 'View Roles':
             viewRoles();
             break;
+        case 'Delete Role':
+            deleteFromDatabase('role');
+            break;
         case 'Add Department':
             addDepartment();
             break;
         case 'View Departments':
             viewDepartments();
+            break;
+        case 'Delete Department':
+            deleteFromDatabase('department');
             break;
         default:
             break;
@@ -131,4 +141,14 @@ function viewDepartments() {
         .then(
             (res) => { console.log(res); }
         );
+}
+
+function deleteFromDatabase(tableName) {
+    inquirer.prompt({
+        type: 'number',
+        name: 'id',
+        message: `Enter ${tableName} ID to delete: `
+    }).then(response => {
+        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${response.id}"`);
+    });
 }
