@@ -7,7 +7,7 @@ dbConnect.testConnection();
 
 // Select employee manager action
 async function selectAction() {
-
+    // Select initial action
     let { action } = await inquirer.prompt({
         type: 'list',
         name: 'action',
@@ -15,6 +15,7 @@ async function selectAction() {
         choices: ['Add', 'Edit', 'View', 'Delete', 'Quit']
     });
 
+    // If action is not to quit application, continue
     if (action !== 'Quit') {
         let { category } = await inquirer.prompt({
             type: 'list',
@@ -63,7 +64,7 @@ async function selectAction() {
             default:
                 break;
         }
-    }
+    } else { dbConnect.endConnection(); }
 }
 
 // Create new employee and add to database
@@ -127,6 +128,7 @@ function addDepartment() {
     });
 }
 
+// View all results from table
 function viewFromDatabase(tableName) {
     dbConnect.sendQuery(`SELECT * FROM ${tableName}`)
         .then(res => {
@@ -136,7 +138,7 @@ function viewFromDatabase(tableName) {
         });
 }
 
-// Edit an employee role in the database
+// Edit data from database
 function editOnDatabase(tableName, choices) {
     inquirer.prompt([{
         type: 'list',
@@ -158,6 +160,7 @@ function editOnDatabase(tableName, choices) {
     })
 }
 
+// Delete data from database
 function deleteFromDatabase(tableName) {
     inquirer.prompt({
         type: 'number',

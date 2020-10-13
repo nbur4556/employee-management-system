@@ -15,9 +15,12 @@ class DbConnection {
     testConnection() {
         this.connection.connect(err => {
             if (err) throw err;
-
             console.log(`Successfully connected to MySQL database`);
         });
+    }
+
+    endConnection() {
+        this.connection.end();
     }
 
     // Read data on the database
@@ -25,9 +28,7 @@ class DbConnection {
         return new Promise((resolve, reject) => {
             this.connection.query(query, (err, res) => {
                 if (err) reject(err);
-
                 resolve(res);
-                this.connection.end();
             });
         });
     }
