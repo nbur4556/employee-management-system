@@ -5,12 +5,14 @@ const envvar = require('./envvar.js');
 dbConnect = new DatabaseConnection('employee_management_db', 'root', envvar.mysqlPassword, 'localhost', 3306);
 dbConnect.testConnection();
 
+// Select employee manager action
 inquirer.prompt({
     type: 'list',
     name: 'action',
-    message: 'Choose an action',
-    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Add Role', 'View Roles', 'Add Department', 'View Departments']
-}).then((response) => {
+    message: 'Choose an action: ',
+    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Delete Employee', 'Add Role',
+        'View Roles', 'Delete Role', 'Add Department', 'View Departments', 'Delete Department']
+}).then(response => {
     switch (response.action) {
         case 'Add Employee':
             addEmployee();
@@ -21,11 +23,17 @@ inquirer.prompt({
         case 'View Employees':
             viewEmployees();
             break;
+        case 'Delete Employee':
+            deleteFromDatabase('employee');
+            break;
         case 'Add Role':
             addRole();
             break;
         case 'View Roles':
             viewRoles();
+            break;
+        case 'Delete Role':
+            deleteFromDatabase('role');
             break;
         case 'Add Department':
             addDepartment();
@@ -33,22 +41,38 @@ inquirer.prompt({
         case 'View Departments':
             viewDepartments();
             break;
+        case 'Delete Department':
+            deleteFromDatabase('department');
+            break;
         default:
             break;
     }
 });
 
-// Create an employee row in the database
+// Create new employee and add to database
 function addEmployee() {
-    let firstName = 'mcTest';
-    let lastName = 'Testie';
-    let roleId = 1;
-    let managerId = 2;
-
-    dbConnect.sendQuery(
-        `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-        VALUE('${firstName}', '${lastName}', ${roleId}, ${managerId})`
-    );
+    inquirer.prompt([{
+        type: 'input',
+        name: 'firstName',
+        message: 'Enter new employees first name:'
+    }, {
+        type: 'input',
+        name: 'lastName',
+        message: 'Enter new employees last name: '
+    }, {
+        type: 'number',
+        name: 'roleId',
+        message: 'Enter new employees role id: '
+    }, {
+        type: 'number',
+        name: 'managerId',
+        message: 'Enter new employees manager id: '
+    }]).then(response => {
+        dbConnect.sendQuery(
+            `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+            VALUE('${response.firstName}', '${response.lastName}', ${response.roleId}, ${response.managerId})`
+        );
+    });
 }
 
 // Edit an employee role in the database
@@ -68,16 +92,26 @@ function viewEmployees() {
         );
 }
 
-// Create a role in the employee database
+// Create new role and add to database
 function addRole() {
-    let title = 'Test Title';
-    let salary = 40000;
-    let departmentId = 1;
-
-    dbConnect.sendQuery(
-        `INSERT INTO role(title, salary, department_id) 
-        VALUE('${title}', ${salary}, ${departmentId})`
-    );
+    inquirer.prompt([{
+        type: 'input',
+        name: 'title',
+        message: 'Enter title of new role: '
+    }, {
+        type: 'number',
+        name: 'salary',
+        message: 'Enter annual salary for new role: '
+    }, {
+        type: 'number',
+        name: 'departmentId',
+        message: 'Enter department ID for new role: '
+    }]).then(response => {
+        dbConnect.sendQuery(
+            `INSERT INTO role(title, salary, department_id) 
+            VALUE('${response.title}', ${response.salary}, ${response.departmentId})`
+        );
+    });
 }
 
 // View all roles in the employee database
@@ -88,13 +122,17 @@ function viewRoles() {
         );
 }
 
-// Create a department in the employee database
+// Create new department and add to database
 function addDepartment() {
-    let name = 'Test Name';
-
-    dbConnect.sendQuery(
-        `INSERT INTO department(name) VALUE('${name}')`
-    );
+    inquirer.prompt({
+        type: 'input',
+        name: 'name',
+        message: 'Enter name of new department'
+    }).then(response => {
+        dbConnect.sendQuery(
+            `INSERT INTO department(name) VALUE('${response.name}')`
+        );
+    });
 }
 
 // View all departments in the employee database
@@ -103,4 +141,14 @@ function viewDepartments() {
         .then(
             (res) => { console.log(res); }
         );
+}
+
+function deleteFromDatabase(tableName) {
+    inquirer.prompt({
+        type: 'number',
+        name: 'id',
+        message: `Enter ${tableName} ID to delete: `
+    }).then(response => {
+        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${response.id}"`);
+    });
 }
