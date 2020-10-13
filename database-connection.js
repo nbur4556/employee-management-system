@@ -33,13 +33,4 @@ class DbConnection {
     }
 }
 
-// const employeeManagementConnection = new DbConnection('employee_management_db');
-// employeeManagementConnection.testConnection();
-
-// DELETE TEST
-// employeeManagementConnection.sendQuery('DELETE FROM employee WHERE id = 2')
-//     .then(
-//         (res) => { console.log(res); }
-//     );
-
 module.exports = DbConnection;

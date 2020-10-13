@@ -6,58 +6,65 @@ dbConnect = new DatabaseConnection('employee_management_db', 'root', envvar.mysq
 dbConnect.testConnection();
 
 // Select employee manager action
-inquirer.prompt([{
-    type: 'list',
-    name: 'action',
-    message: 'Choose an action',
-    choices: ['Add', 'Edit', 'View', 'Delete']
-}, {
-    type: 'list',
-    name: 'category',
-    message: 'Choose a category',
-    choices: ['Employee', 'Role', 'Department']
-}]).then(res => {
-    switch (`${res.action} ${res.category}`) {
-        case 'Add Employee':
-            addEmployee();
-            break;
-        case 'Edit Employee':
-            editOnDatabase('employee', ['first_name', 'last_name', 'role_id', 'manager_id']);
-            break;
-        case 'View Employee':
-            viewFromDatabase('employee');
-            break;
-        case 'Delete Employee':
-            deleteFromDatabase('employee');
-            break;
-        case 'Add Role':
-            addRole();
-            break;
-        case 'Edit Role':
-            editOnDatabase('role', ['title', 'salary', 'department_id']);
-            break;
-        case 'View Role':
-            viewFromDatabase('role');
-            break;
-        case 'Delete Role':
-            deleteFromDatabase('role');
-            break;
-        case 'Add Department':
-            addDepartment();
-            break;
-        case 'Edit Department':
-            editOnDatabase('department', ['name']);
-            break;
-        case 'View Department':
-            viewFromDatabase('department');
-            break;
-        case 'Delete Department':
-            deleteFromDatabase('department');
-            break;
-        default:
-            break;
+async function selectAction() {
+
+    let { action } = await inquirer.prompt({
+        type: 'list',
+        name: 'action',
+        message: 'Choose an action',
+        choices: ['Add', 'Edit', 'View', 'Delete', 'Quit']
+    });
+
+    if (action !== 'Quit') {
+        let { category } = await inquirer.prompt({
+            type: 'list',
+            name: 'category',
+            message: 'Choose a category',
+            choices: ['Employee', 'Role', 'Department']
+        });
+
+        switch (`${action} ${category}`) {
+            case 'Add Employee':
+                addEmployee();
+                break;
+            case 'Edit Employee':
+                editOnDatabase('employee', ['first_name', 'last_name', 'role_id', 'manager_id']);
+                break;
+            case 'View Employee':
+                viewFromDatabase('employee');
+                break;
+            case 'Delete Employee':
+                deleteFromDatabase('employee');
+                break;
+            case 'Add Role':
+                addRole();
+                break;
+            case 'Edit Role':
+                editOnDatabase('role', ['title', 'salary', 'department_id']);
+                break;
+            case 'View Role':
+                viewFromDatabase('role');
+                break;
+            case 'Delete Role':
+                deleteFromDatabase('role');
+                break;
+            case 'Add Department':
+                addDepartment();
+                break;
+            case 'Edit Department':
+                editOnDatabase('department', ['name']);
+                break;
+            case 'View Department':
+                viewFromDatabase('department');
+                break;
+            case 'Delete Department':
+                deleteFromDatabase('department');
+                break;
+            default:
+                break;
+        }
     }
-});
+}
 
 // Create new employee and add to database
 function addEmployee() {
@@ -160,3 +167,5 @@ function deleteFromDatabase(tableName) {
         dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${res.id}"`);
     });
 }
+
+selectAction();
