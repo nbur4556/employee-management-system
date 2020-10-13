@@ -21,7 +21,7 @@ inquirer.prompt({
             editEmployee();
             break;
         case 'View Employees':
-            viewEmployees();
+            viewFromDatabase('employee');
             break;
         case 'Delete Employee':
             deleteFromDatabase('employee');
@@ -30,7 +30,7 @@ inquirer.prompt({
             addRole();
             break;
         case 'View Roles':
-            viewRoles();
+            viewFromDatabase('role');
             break;
         case 'Delete Role':
             deleteFromDatabase('role');
@@ -39,7 +39,7 @@ inquirer.prompt({
             addDepartment();
             break;
         case 'View Departments':
-            viewDepartments();
+            viewFromDatabase('department');
             break;
         case 'Delete Department':
             deleteFromDatabase('department');
@@ -85,12 +85,12 @@ function editEmployee() {
 }
 
 // View all employee roles in the database
-function viewEmployees() {
-    dbConnect.sendQuery('SELECT * FROM employee')
-        .then(
-            (res) => { console.log(res); }
-        );
-}
+// function viewEmployees() {
+//     dbConnect.sendQuery('SELECT * FROM employee')
+//         .then(
+//             res => { console.log(res); }
+//         );
+// }
 
 // Create new role and add to database
 function addRole() {
@@ -115,12 +115,12 @@ function addRole() {
 }
 
 // View all roles in the employee database
-function viewRoles() {
-    dbConnect.sendQuery('SELECT * FROM role')
-        .then(
-            (res) => { console.log(res); }
-        );
-}
+// function viewRoles() {
+//     dbConnect.sendQuery('SELECT * FROM role')
+//         .then(
+//             res => { console.log(res); }
+//         );
+// }
 
 // Create new department and add to database
 function addDepartment() {
@@ -136,11 +136,18 @@ function addDepartment() {
 }
 
 // View all departments in the employee database
-function viewDepartments() {
-    dbConnect.sendQuery('SELECT * FROM department')
-        .then(
-            (res) => { console.log(res); }
-        );
+// function viewDepartments() {
+//     dbConnect.sendQuery('SELECT * FROM department')
+//         .then(
+//             res => { console.log(res); }
+//         );
+// }
+
+function viewFromDatabase(tableName) {
+    dbConnect.sendQuery(`SELECT * FROM ${tableName}`)
+        .then(res => {
+            console.log(res);
+        });
 }
 
 function deleteFromDatabase(tableName) {
