@@ -158,33 +158,36 @@ function viewFromDatabase(tableName) {
             for (let i = 0; i < res.length; i++) {
                 console.log(res[i]);
             }
-        }).then(() => {
             selectAction();
-        });
+        })
 }
 
 // Edit data from database
-function editOnDatabase(tableName, choices) {
-    inquirer.prompt([{
+async function editOnDatabase(tableName, choices) {
+    let { updateField, itemName, newValue } = await inquirer.prompt([{
         type: 'list',
         name: 'updateField',
         message: 'Select field to update',
         choices: choices
     }, {
-        type: 'number',
-        name: 'id',
-        message: `Enter ${tableName} ID to update:`,
+        type: 'list',
+        name: 'itemName',
+        message: `Select item to update`,
+        choices: await dbConnect.getSelectionOptions(tableName)
     }, {
         type: 'input',
         name: 'newValue',
         message: 'Enter new value:',
-    }]).then(res => {
-        dbConnect.sendQuery(
-            `UPDATE ${tableName} SET ${res.updateField} = "${res.newValue}" WHERE id = ${res.id}`
-        ).then(() => {
-            selectAction();
-        });
-    })
+    }]);
+
+    // Gets id from choice string
+    let itemId = getIdFromChoice(itemName);
+
+    dbConnect.sendQuery(
+        `UPDATE ${tableName} SET ${updateField} = "${newValue}" WHERE id = ${itemId}`
+    );
+
+    selectAction();
 }
 
 // Delete data from database
