@@ -5,6 +5,7 @@ const envvar = require('./envvar.js');
 dbConnect = new DatabaseConnection('employee_management_db', 'root', envvar.mysqlPassword, 'localhost', 3306);
 dbConnect.testConnection();
 
+// Select employee manager action
 inquirer.prompt({
     type: 'list',
     name: 'action',
@@ -38,13 +39,8 @@ inquirer.prompt({
     }
 });
 
-// Create an employee row in the database
+// Create new employee and add to database
 function addEmployee() {
-    // let firstName = 'mcTest';
-    // let lastName = 'Testie';
-    // let roleId = 1;
-    // let managerId = 2;
-
     inquirer.prompt([{
         type: 'input',
         name: 'firstName',
@@ -86,16 +82,30 @@ function viewEmployees() {
         );
 }
 
-// Create a role in the employee database
+// Create new role and add to database
 function addRole() {
-    let title = 'Test Title';
-    let salary = 40000;
-    let departmentId = 1;
+    // let title = 'Test Title';
+    // let salary = 40000;
+    // let departmentId = 1;
 
-    dbConnect.sendQuery(
-        `INSERT INTO role(title, salary, department_id) 
-        VALUE('${title}', ${salary}, ${departmentId})`
-    );
+    inquirer.prompt([{
+        type: 'input',
+        name: 'title',
+        message: 'Enter title of new role: '
+    }, {
+        type: 'number',
+        name: 'salary',
+        message: 'Enter annual salary for new role: '
+    }, {
+        type: 'number',
+        name: 'departmentId',
+        message: 'Enter department ID for new role: '
+    }]).then(response => {
+        dbConnect.sendQuery(
+            `INSERT INTO role(title, salary, department_id) 
+            VALUE('${response.title}', ${response.salary}, ${response.departmentId})`
+        );
+    });
 }
 
 // View all roles in the employee database
