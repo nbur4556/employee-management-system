@@ -10,7 +10,7 @@ inquirer.prompt({
     name: 'action',
     message: 'Choose an action',
     choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Add Role', 'View Roles', 'Add Department', 'View Departments']
-}).then((response) => {
+}).then(response => {
     switch (response.action) {
         case 'Add Employee':
             addEmployee();
@@ -40,15 +40,33 @@ inquirer.prompt({
 
 // Create an employee row in the database
 function addEmployee() {
-    let firstName = 'mcTest';
-    let lastName = 'Testie';
-    let roleId = 1;
-    let managerId = 2;
+    // let firstName = 'mcTest';
+    // let lastName = 'Testie';
+    // let roleId = 1;
+    // let managerId = 2;
 
-    dbConnect.sendQuery(
-        `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-        VALUE('${firstName}', '${lastName}', ${roleId}, ${managerId})`
-    );
+    inquirer.prompt([{
+        type: 'input',
+        name: 'firstName',
+        message: 'Enter new employees first name:'
+    }, {
+        type: 'input',
+        name: 'lastName',
+        message: 'Enter new employees last name: '
+    }, {
+        type: 'number',
+        name: 'roleId',
+        message: 'Enter new employees role id: '
+    }, {
+        type: 'number',
+        name: 'managerId',
+        message: 'Enter new employees manager id: '
+    }]).then(response => {
+        dbConnect.sendQuery(
+            `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+            VALUE('${response.firstName}', '${response.lastName}', ${response.roleId}, ${response.managerId})`
+        );
+    });
 }
 
 // Edit an employee role in the database
