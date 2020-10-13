@@ -6,21 +6,25 @@ dbConnect = new DatabaseConnection('employee_management_db', 'root', envvar.mysq
 dbConnect.testConnection();
 
 // Select employee manager action
-inquirer.prompt({
+inquirer.prompt([{
     type: 'list',
     name: 'action',
     message: 'Choose an action',
-    choices: ['Add Employee', 'Edit Employee', 'View Employees', 'Delete Employee', 'Add Role', 'Edit Role',
-        'View Roles', 'Delete Role', 'Add Department', 'Edit Department', 'View Departments', 'Delete Department']
-}).then(response => {
-    switch (response.action) {
+    choices: ['Add', 'Edit', 'View', 'Delete']
+}, {
+    type: 'list',
+    name: 'category',
+    message: 'Choose a category',
+    choices: ['Employee', 'Role', 'Department']
+}]).then(res => {
+    switch (`${res.action} ${res.category}`) {
         case 'Add Employee':
             addEmployee();
             break;
         case 'Edit Employee':
             editOnDatabase('employee', ['first_name', 'last_name', 'role_id', 'manager_id']);
             break;
-        case 'View Employees':
+        case 'View Employee':
             viewFromDatabase('employee');
             break;
         case 'Delete Employee':
@@ -32,7 +36,7 @@ inquirer.prompt({
         case 'Edit Role':
             editOnDatabase('role', ['title', 'salary', 'department_id']);
             break;
-        case 'View Roles':
+        case 'View Role':
             viewFromDatabase('role');
             break;
         case 'Delete Role':
@@ -44,7 +48,7 @@ inquirer.prompt({
         case 'Edit Department':
             editOnDatabase('department', ['name']);
             break;
-        case 'View Departments':
+        case 'View Department':
             viewFromDatabase('department');
             break;
         case 'Delete Department':
@@ -73,10 +77,10 @@ function addEmployee() {
         type: 'number',
         name: 'managerId',
         message: 'Enter new employees manager id:'
-    }]).then(response => {
+    }]).then(res => {
         dbConnect.sendQuery(
             `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-            VALUE('${response.firstName}', '${response.lastName}', ${response.roleId}, ${response.managerId})`
+            VALUE('${res.firstName}', '${res.lastName}', ${res.roleId}, ${res.managerId})`
         );
     });
 }
@@ -95,10 +99,10 @@ function addRole() {
         type: 'number',
         name: 'departmentId',
         message: 'Enter department ID for new role:'
-    }]).then(response => {
+    }]).then(res => {
         dbConnect.sendQuery(
             `INSERT INTO role(title, salary, department_id) 
-            VALUE('${response.title}', ${response.salary}, ${response.departmentId})`
+            VALUE('${res.title}', ${res.salary}, ${res.departmentId})`
         );
     });
 }
@@ -109,9 +113,9 @@ function addDepartment() {
         type: 'input',
         name: 'name',
         message: 'Enter name of new department'
-    }).then(response => {
+    }).then(res => {
         dbConnect.sendQuery(
-            `INSERT INTO department(name) VALUE('${response.name}')`
+            `INSERT INTO department(name) VALUE('${res.name}')`
         );
     });
 }
@@ -140,9 +144,9 @@ function editOnDatabase(tableName, choices) {
         type: 'input',
         name: 'newValue',
         message: 'Enter new value:',
-    }]).then(response => {
+    }]).then(res => {
         dbConnect.sendQuery(
-            `UPDATE ${tableName} SET ${response.updateField} = "${response.newValue}" WHERE id = ${response.id}`
+            `UPDATE ${tableName} SET ${res.updateField} = "${res.newValue}" WHERE id = ${res.id}`
         );
     })
 }
@@ -152,7 +156,7 @@ function deleteFromDatabase(tableName) {
         type: 'number',
         name: 'id',
         message: `Enter ${tableName} ID to delete:`
-    }).then(response => {
-        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${response.id}"`);
+    }).then(res => {
+        dbConnect.sendQuery(`DELETE FROM ${tableName} WHERE id="${res.id}"`);
     });
 }
