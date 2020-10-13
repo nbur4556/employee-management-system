@@ -137,18 +137,18 @@ async function addRole() {
 }
 
 // Create new department and add to database
-function addDepartment() {
-    inquirer.prompt({
+async function addDepartment() {
+    let { name } = await inquirer.prompt({
         type: 'input',
         name: 'name',
         message: 'Enter name of new department'
-    }).then(res => {
-        dbConnect.sendQuery(
-            `INSERT INTO department(name) VALUE('${res.name}')`
-        ).then(() => {
-            selectAction();
-        });
     });
+
+    dbConnect.sendQuery(
+        `INSERT INTO department(name) VALUE('${name}')`
+    );
+
+    selectAction();
 }
 
 // View all results from table
