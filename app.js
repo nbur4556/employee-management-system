@@ -103,8 +103,8 @@ async function addEmployee() {
 }
 
 // Create new role and add to database
-function addRole() {
-    inquirer.prompt([{
+async function addRole() {
+    let { title, salary, departmentName } = await inquirer.prompt([{
         type: 'input',
         name: 'title',
         message: 'Enter title of new role:'
@@ -113,17 +113,27 @@ function addRole() {
         name: 'salary',
         message: 'Enter annual salary for new role:'
     }, {
-        type: 'number',
-        name: 'departmentId',
-        message: 'Enter department ID for new role:'
-    }]).then(res => {
-        dbConnect.sendQuery(
+        type: 'list',
+        name: 'departmentName',
+        message: 'Enter department ID for new role:',
+        choices: await dbConnect.getSelectionOptions('department')
+    }]);
+
+    // Error handling
+    if (salary) {
+        // Gets id from choice string
+        let departmentId = getIdFromChoice(departmentName);
+
+        await dbConnect.sendQuery(
             `INSERT INTO role(title, salary, department_id) 
-            VALUE('${res.title}', ${res.salary}, ${res.departmentId})`
-        ).then(() => {
-            selectAction();
-        });
-    });
+            VALUE('${title}', ${salary}, ${departmentId})`
+        );
+    }
+    else {
+        console.error('Could not add role, salary is not a number');
+    }
+
+    selectAction();
 }
 
 // Create new department and add to database
