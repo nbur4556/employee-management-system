@@ -70,9 +70,6 @@ async function selectAction() {
 
 // Create new employee and add to database
 async function addEmployee() {
-    let roleRes = await dbConnect.sendQuery(`SELECT * FROM role`);
-    let employeeRes = await dbConnect.sendQuery(`SELECT * FROM employee`);
-
     let { firstName, lastName, roleId, managerName } = await inquirer.prompt([{
         type: 'input',
         name: 'firstName',
@@ -85,25 +82,12 @@ async function addEmployee() {
         type: 'list',
         name: 'roleId',
         message: 'Select a role for new employee',
-        choices: () => {
-            let arr = new Array();
-            for (let i = 0; i < roleRes.length; i++) {
-                arr.push(`${roleRes[i].id}: ${roleRes[i].title}`);
-            }
-            return arr;
-        }
+        choices: await dbConnect.getSelectionOptions('role')
     }, {
         type: 'list',
         name: 'managerName',
         message: 'Select a manager for new employee',
-        choices: () => {
-            let arr = new Array();
-            arr.push('0: none');
-            for (let i = 0; i < employeeRes.length; i++) {
-                arr.push(`${employeeRes[i].id}: ${employeeRes[i].first_name} ${employeeRes[i].last_name}`);
-            }
-            return arr;
-        }
+        choices: await dbConnect.getSelectionOptions('employee')
     }]);
 
     await dbConnect.sendQuery(

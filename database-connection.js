@@ -32,6 +32,23 @@ class DbConnection {
             });
         });
     }
+
+    async getSelectionOptions(tableName) {
+        let arr = new Array();
+        let result = await dbConnect.sendQuery(`SELECT * FROM ${tableName}`);
+
+        for (let i = 0; i < result.length; i++) {
+            if (tableName === 'employee') {
+                arr.push(`${result[i].id}: ${result[i].first_name} ${result[i].last_name}`);
+            } else if (tableName === 'role') {
+                arr.push(`${result[i].id}: ${result[i].title}`);
+            } else if (tableName === 'department') {
+                arr.push(`${result[i].id}: ${result[i].name}`);
+            }
+        }
+
+        return arr;
+    }
 }
 
 module.exports = DbConnection;
