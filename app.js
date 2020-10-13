@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const DatabaseConnection = require('./database-connection.js');
 const envvar = require('./envvar.js');
 
+// Initialize database connection
 dbConnect = new DatabaseConnection('employee_management_db', 'root', envvar.mysqlPassword, 'localhost', 3306);
 dbConnect.testConnection();
 
@@ -68,8 +69,11 @@ async function selectAction() {
 }
 
 // Create new employee and add to database
-function addEmployee() {
-    inquirer.prompt([{
+async function addEmployee() {
+    let roleRes = await dbConnect.sendQuery(`SELECT * FROM role`);
+    let employeeRes = await dbConnect.sendQuery(`SELECT * FROM employee`);
+
+    let { firstName, lastName, roleId, managerName } = await inquirer.prompt([{
         type: 'input',
         name: 'firstName',
         message: 'Enter new employees first name:'
@@ -78,21 +82,36 @@ function addEmployee() {
         name: 'lastName',
         message: 'Enter new employees last name:'
     }, {
-        type: 'number',
+        type: 'list',
         name: 'roleId',
-        message: 'Enter new employees role id:'
+        message: 'Select a role for new employee',
+        choices: () => {
+            let arr = new Array();
+            for (let i = 0; i < roleRes.length; i++) {
+                arr.push(`${roleRes[i].id}: ${roleRes[i].title}`);
+            }
+            return arr;
+        }
     }, {
-        type: 'number',
-        name: 'managerId',
-        message: 'Enter new employees manager id:'
-    }]).then(res => {
-        dbConnect.sendQuery(
-            `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-            VALUE('${res.firstName}', '${res.lastName}', ${res.roleId}, ${res.managerId})`
-        ).then(() => {
-            selectAction();
-        });
-    });
+        type: 'list',
+        name: 'managerName',
+        message: 'Select a manager for new employee',
+        choices: () => {
+            let arr = new Array();
+            arr.push('0: none');
+            for (let i = 0; i < employeeRes.length; i++) {
+                arr.push(`${employeeRes[i].id}: ${employeeRes[i].first_name} ${employeeRes[i].last_name}`);
+            }
+            return arr;
+        }
+    }]);
+
+    await dbConnect.sendQuery(
+        `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+        VALUE('${firstName}', '${lastName}', ${roleId[0]}, ${managerName[0]})`
+    );
+
+    selectAction();
 }
 
 // Create new role and add to database
@@ -184,4 +203,5 @@ function deleteFromDatabase(tableName) {
     });
 }
 
+// Start Application
 selectAction();
