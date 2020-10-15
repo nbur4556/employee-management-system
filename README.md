@@ -31,6 +31,17 @@ Store and organize data for employees, roles, and departments.
 
         node app.js
 
+* Use your arrow keys to select an action and press 'return'. Actions include:
+    * Add - Create a new entry
+    * Edit - Update an existing entry
+    * View - Display entries
+    * Delete - Remove an existing entry
+    * Quit - Close the application
+* You will be asked to apply the command to an Employee, Role, or Department
+    * _Creating a new Role requires an existing department, and creating a new employee requires an existing role,_
+* Fill in the prompts to complete your action. Some prompts will allow you to choose from existing options, others you will type the information
+* When the action is complete, you will be asked to choose a new action. You may continue by selecting a new action, or quit.
+
 ## License
 
 Employee Management System is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
