@@ -42,6 +42,8 @@ Store and organize data for employees, roles, and departments.
 * Fill in the prompts to complete your action. Some prompts will allow you to choose from existing options, others you will type the information
 * When the action is complete, you will be asked to choose a new action. You may continue by selecting a new action, or quit.
 
+[Example Video](https://drive.google.com/file/d/1pweZrz_jVZ5SUtLJYEcpxhtnwqR6sPqO/view)
+
 ## License
 
 Employee Management System is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
